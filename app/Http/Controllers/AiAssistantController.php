@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class AiAssistantController extends Controller
 {
     private const OLLAMA_API_URL = 'http://localhost:11434/api/chat';
-    private const MODEL = 'gemma3:1b';
+    private const MODEL = 'qwen2.5-coder:3b';
     private const SERVER_STATS_CACHE_KEY = 'server_stats';
     private const SERVER_STATS_CACHE_TIME = 30; // seconds
 

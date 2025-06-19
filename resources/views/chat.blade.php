@@ -168,6 +168,17 @@
             height: 100vh;
             z-index: 40;
             transform: translateX(-100%);
+            left: 0;
+            top: 0;
+            background-color: #fff;
+        }
+        @media (min-width: 768px) {
+            .sidebar {
+            position: relative;
+            transform: translateX(0);
+            height: auto;
+            background-color: inherit;
+            }
         }
         @media (min-width: 768px) {
             .sidebar {
@@ -311,6 +322,55 @@
         .dark .disclaimer-accept {
             background-color: #6366f1;
         }
+
+        /* Mobile-specific styles */
+        @media (max-width: 767px) {
+            .header-title {
+                font-size: 1rem;
+            }
+            .server-stats-container {
+                display: none;
+            }
+            .mobile-stats {
+                display: flex !important;
+                gap: 0.5rem;
+            }
+            .chat-message {
+                max-width: 95% !important;
+            }
+            .input-container {
+                padding: 0.75rem;
+            }
+            .prompt-input {
+                padding: 0.75rem;
+            }
+            .submit-btn {
+                padding: 0.75rem;
+            }
+            .sidebar {
+                width: 85%;
+            }
+            .code-block-container {
+                font-size: 0.75rem;
+            }
+            .code-block-header {
+                padding: 0.5rem;
+            }
+            .code-block-btn {
+                padding: 0.2rem 0.4rem;
+                font-size: 0.6rem;
+            }
+            .code-block-btn i {
+                font-size: 0.6rem;
+            }
+        }
+
+        /* Desktop-specific styles */
+        @media (min-width: 768px) {
+            .mobile-stats {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-dark-900">
@@ -368,12 +428,12 @@
                     <button id="menuButton" class="mr-4 p-1 rounded-md hover:bg-primary-700 dark:hover:bg-gray-700 md:hidden">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <h1 class="text-xl font-bold">
+                    <h1 class="text-xl font-bold header-title">
                         <i class="fas fa-robot mr-2"></i>JM AI
                     </h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-3 server-stats-container">
                         <div class="server-stat text-white dark:text-gray-300">
                             <span class="hidden sm:inline">CPU:</span>
                             <span id="cpuUsage">{{ $serverStats['cpu'] ?? 0 }}%</span>
@@ -395,6 +455,13 @@
                         </div>
                         <span id="lastUpdated" class="text-xs hidden sm:block">{{ $serverStats['updated_at'] ?? 'N/A' }}</span>
                     </div>
+                    <div class="mobile-stats" style="display: none;">
+                        <div class="signal-indicator">
+                            <div id="mobileSignal1" class="signal-bar h-2"></div>
+                            <div id="mobileSignal2" class="signal-bar h-3"></div>
+                            <div id="mobileSignal3" class="signal-bar h-4"></div>
+                        </div>
+                    </div>
                     <button id="darkModeToggle" class="p-2 rounded-full hover:bg-primary-700 dark:hover:bg-gray-700">
                         <i class="fas {{ session('dark_mode') ? 'fa-sun' : 'fa-moon' }}"></i>
                     </button>
@@ -412,7 +479,7 @@
                 <div id="chatContainer" class="flex-1 overflow-y-auto p-4 custom-scrollbar space-y-4">
                     @foreach($conversations as $msg)
                         <div class="flex {{ $msg['role'] === 'user' ? 'justify-end' : 'justify-start' }}">
-                            <div class="max-w-[90%] md:max-w-[80%] rounded-lg p-3 {{ $msg['role'] === 'user' ? 'bg-blue-50 dark:bg-blue-900/30' : 'bg-white dark:bg-dark-800 border dark:border-gray-700' }}">
+                            <div class="max-w-[90%] md:max-w-[80%] rounded-lg p-3 chat-message {{ $msg['role'] === 'user' ? 'bg-blue-50 dark:bg-blue-900/30' : 'bg-white dark:bg-dark-800 border dark:border-gray-700' }}">
                                 <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">
                                     {{ $msg['role'] === 'user' ? 'You' : 'AI' }}
                                 </div>
@@ -429,7 +496,7 @@
                 </div>
 
                 <!-- Input Area -->
-                <div class="p-4 border-t dark:border-gray-700">
+                <div class="p-4 border-t dark:border-gray-700 input-container">
                     <form id="chatForm" class="flex gap-2">
                         @csrf
                         <input type="hidden" name="chat_id" value="{{ $currentChatId }}">
@@ -437,7 +504,7 @@
                             type="text"
                             id="promptInput"
                             name="prompt"
-                            class="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 bg-white dark:bg-dark-800 border-gray-300 dark:border-gray-700 dark:text-white"
+                            class="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-600 bg-white dark:bg-dark-800 border-gray-300 dark:border-gray-700 dark:text-white prompt-input"
                             placeholder="Type your message..."
                             autocomplete="off"
                             required
@@ -446,7 +513,7 @@
                         <button
                             type="submit"
                             id="submitBtn"
-                            class="bg-primary-600 dark:bg-primary-700 text-white p-3 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600"
+                            class="bg-primary-600 dark:bg-primary-700 text-white p-3 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 submit-btn"
                         >
                             <i class="fas fa-paper-plane"></i>
                         </button>
@@ -524,6 +591,9 @@
         const signal1 = document.getElementById('signal1');
         const signal2 = document.getElementById('signal2');
         const signal3 = document.getElementById('signal3');
+        const mobileSignal1 = document.getElementById('mobileSignal1');
+        const mobileSignal2 = document.getElementById('mobileSignal2');
+        const mobileSignal3 = document.getElementById('mobileSignal3');
 
         // Initialize the app
         async function init() {
@@ -553,6 +623,12 @@
             signal1.classList.toggle('active', strength >= 1);
             signal2.classList.toggle('active', strength >= 2);
             signal3.classList.toggle('active', strength >= 3);
+            
+            if (mobileSignal1 && mobileSignal2 && mobileSignal3) {
+                mobileSignal1.classList.toggle('active', strength >= 1);
+                mobileSignal2.classList.toggle('active', strength >= 2);
+                mobileSignal3.classList.toggle('active', strength >= 3);
+            }
             
             setTimeout(updateSignalStrength, 3000);
         }
@@ -817,7 +893,7 @@
                 if (startPos > lastPos) {
                     const plainText = rawResponseText.substring(lastPos, startPos);
                     if (plainText.trim() !== '') {
-                        htmlParts += `<p class="mb-2">${nl2br(escapeHtml(plainText))}</p>`;
+                                               htmlParts += `<p class="mb-2">${nl2br(escapeHtml(plainText))}</p>`;
                     }
                 }
 
