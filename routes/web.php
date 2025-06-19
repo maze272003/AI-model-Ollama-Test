@@ -10,7 +10,5 @@ Route::get('/', function () {
 // Chat routes
 Route::get('/chat', [AiAssistantController::class, 'index']);
 Route::post('/chat/ask', [AiAssistantController::class, 'ask'])->name('chat.ask');
-
-// Image upload route
-Route::post('/chat/upload-image', [AiAssistantController::class, 'uploadImage'])->name('chat.uploadImage');
-Route::post('/chat/clear', [AiAssistantController::class, 'clearConversation'])->name('chat.clear'); // New route
+Route::post('/chat/change-model', [AiAssistantController::class, 'changeModel'])->name('chat.change-model');
+Route::post('/chat/clear', [AiAssistantController::class, 'clearConversation'])->name('chat.clear');
