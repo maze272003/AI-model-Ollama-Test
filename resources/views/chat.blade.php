@@ -464,7 +464,7 @@
                 <span class="w-2 h-2 bg-gray-400 dark:bg-gray-300 rounded-full"></span>
                 <span class="w-2 h-2 bg-gray-400 dark:bg-gray-300 rounded-full"></span>
             </div>
-            <span>AI is typing...</span>
+            <span>AI is Thinking...</span>
         </div>
     </div>
 
