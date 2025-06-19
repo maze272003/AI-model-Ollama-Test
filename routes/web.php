@@ -1,14 +1,16 @@
 <?php
+
 use App\Http\Controllers\AiAssistantController;
 use Illuminate\Support\Facades\Route;
 
-// Default route to chat
 Route::get('/', function () {
     return redirect('/chat');
 });
 
-// Chat routes
-Route::get('/chat', [AiAssistantController::class, 'index']);
+Route::get('/chat', [AiAssistantController::class, 'index'])->name('chat.index');
 Route::post('/chat/ask', [AiAssistantController::class, 'ask'])->name('chat.ask');
-Route::post('/chat/change-model', [AiAssistantController::class, 'changeModel'])->name('chat.change-model');
 Route::post('/chat/clear', [AiAssistantController::class, 'clearConversation'])->name('chat.clear');
+Route::post('/chat/toggle-dark-mode', [AiAssistantController::class, 'toggleDarkMode'])->name('chat.toggle-dark-mode');
+Route::get('/chat/server-stats', [AiAssistantController::class, 'getServerStats'])->name('chat.server-stats');
+Route::get('/chat/history', [AiAssistantController::class, 'getFullChatHistory'])->name('chat.history');
+Route::get('/chat/details/{chatId}', [AiAssistantController::class, 'getChatDetails'])->name('chat.details');
