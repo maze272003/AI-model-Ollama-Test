@@ -13,7 +13,15 @@ use Illuminate\Support\Facades\DB;
 class AiAssistantController extends Controller
 {
     private const OLLAMA_API_URL = 'http://localhost:11434/api/chat';
-    private const MODEL = 'qwen2.5-coder:3b';
+    private const MODEL = 'phi3:3.8b';
+    // PS C:\Users\Administrator\Documents\test\AI-model-Ollama-Test> ollama list
+    // NAME                     ID              SIZE      MODIFIED       
+    // phi3:3.8b                4f2222927938    2.2 GB    13 seconds ago
+    // deepseek-coder-v2:16b    63fb193b3a9b    8.9 GB    24 hours ago
+    // qwen2.5-coder:0.5b       4ff64a7f502a    397 MB    13 days ago
+    // gemma3:1b                8648f39daa8f    815 MB    13 days ago
+    // qwen2.5-coder:3b         f72c60cabf62    1.9 GB    13 days ago
+    // deepseek-r1:14b          c333b7232bdb    9.0 GB    13 days ago
     private const SERVER_STATS_CACHE_KEY = 'server_stats';
     private const SERVER_STATS_CACHE_TIME = 30; // seconds
 
